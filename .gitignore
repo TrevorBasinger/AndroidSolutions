@@ -1,0 +1,10 @@
+bin/
+gen/
+.settings
+.classpath
+.project
+tags
+patch
+*#*#
+*.DS_Store
+local.properties
