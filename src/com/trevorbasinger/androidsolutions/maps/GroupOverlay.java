@@ -24,6 +24,7 @@ public abstract class GroupOverlay<T extends OverlayItem> extends ItemizedOverla
 
   private int zoomLevel = -1;
   private ArrayList<T> modifiedList = new ArrayList<T>();
+  private boolean refresh = false;
   
   public GroupOverlay(Drawable defaultMarker, Drawable groupMarker){
     super(defaultMarker);
@@ -34,12 +35,17 @@ public abstract class GroupOverlay<T extends OverlayItem> extends ItemizedOverla
   @Override
   public void draw(Canvas canvas, MapView mapView, boolean shadow) {
     // if the zoom level has changed
-    if( groupMarker != null && zoomLevel != mapView.getZoomLevel() ) {
+    if((groupMarker != null && zoomLevel != mapView.getZoomLevel()) || refresh ) {
+      refresh = false; // reset refresh to false
       zoomLevel = mapView.getZoomLevel(); // Set the new current zoom level
       // Might need to add exception handling for ConcurrentModificationExceptions
       groupMarkers(mapView.getProjection()); 
     }
     super.draw(canvas, mapView, shadow);
+  }
+
+  protected void refresh() {
+    this.refresh = true;
   }
 
   protected synchronized void groupMarkers(Projection p) {
